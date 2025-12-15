@@ -303,6 +303,10 @@ main {
 
 /* BUTTONS */
 
+button {
+  background-color: transparent;
+}
+
 .btn {
   border-radius: 999px;
   border: 1px solid transparent;
