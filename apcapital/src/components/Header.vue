@@ -29,12 +29,13 @@
       <!-- Navigation -->
       <nav :class="['nav', { 'nav--open': isOpen }]">
         <!-- Home (real link) -->
-        <a :href="homeHref" class="nav-link" @click="closeMenu">Home</a>
+        <router-link to="/" class="nav-link" @click="closeMenu">Home</router-link>
+
 
         <!-- Placeholder links for now -->
         <button type="button" class="nav-link nav-link--button" @click="closeMenu">About Us</button>
 
-        <button type="button" class="nav-link nav-link--button" @click="closeMenu">Our Team</button>
+        <router-link to="/our-team" class="nav-link nav-link--button" @click="closeMenu">Our Team</router-link>
 
         <!-- Equity Research / Deal of the Week grouped -->
         <div class="nav-group">
