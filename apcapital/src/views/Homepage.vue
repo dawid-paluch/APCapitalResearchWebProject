@@ -1,384 +1,344 @@
 <template>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=network_node,show_chart" />
-  <div class="page">
-    <main>
-      <!-- HERO -->
-      <section id="hero" class="section hero">
-        <div class="container">
-          <h1>AP Capital Research</h1>
-          <p class="section-kicker">Student-led investment research</p>
+  <div class="homepage">
+    <section class="hero">
+      <div class="ambient ambient-one"></div>
+      <div class="ambient ambient-two"></div>
+      <div class="container hero-content">
+        <p class="eyebrow">Student Finance Society</p>
+        <h1>AP Capital Research</h1>
+        <p class="hero-copy">
+          A student-led platform for equity, M&amp;A, and quant research with practical weekly insights.
+        </p>
+        <div class="hero-actions">
+          <a href="#featured-reports" class="btn btn-primary">Read Latest Research</a>
+          <router-link to="/our-team" class="btn btn-secondary">Meet the Team</router-link>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- WELCOME-->
-      <section id="welcome" class="section">
-        <div class="container">
-          <div class="welcome-header">
-            <h2 class="welcome-title">Welcome to our Community</h2>
-          </div>
-          <div class="welcome-content-grid">
-            <div>
-              <div class="welcome-sections-header">
-                <div class="welcome-span">
-                  <span class="material-symbols-outlined welcome-icon">network_node</span>
-                </div>
-                <h3>Learn. Invest. Network.</h3>
-              </div>
-              <p> Join a student-led society focused on practical investment research.</p>
-            </div>
-            
-            <div>
-              <div class="welcome-sections-header">
-                <div class="welcome-span">
-                  <span class="material-symbols-outlined welcome-icon">show_chart</span>
-                </div>
-                <h3>Public Markets · Macro &amp; Credit · Quant &amp; Data</h3>
-              </div>
-              <p>Explore diverse investment strategies and market insights.</p>
-            </div>
-          </div>
+    <section id="what-we-do" class="section">
+      <div class="container">
+        <div class="section-header">
+          <p class="eyebrow section-eyebrow">Divisions</p>
+          <h2>What we do</h2>
         </div>
-      </section>
 
-      <!-- ABOUT -->
-      <section id="about" class="section">
-        <div class="container">
-          <div class="section-header">
-            <p class="section-kicker">About</p>
-            <h2 class="section-title">What is AP Capital Research?</h2>
-          </div>
-          <p class="section-text">
-            Lightweight prototype website for the proposed AP Capital Research society at the
-            University of Surrey. Content, structure and branding here are placeholders and can be
-            replaced by the Directors later.
-            AP Capital Research is a student investment and markets society concept for the
-            University of Surrey. The idea is to give students a simple, practical way to learn
-            about public markets, macro and quantitative investing. This text is a placeholder for
-            the official description.
-          </p>
+        <div class="division-grid">
+          <article v-for="division in divisions" :key="division.title" class="division-card">
+            <p class="division-tag">{{ division.tag }}</p>
+            <h3>{{ division.title }}</h3>
+            <p>{{ division.description }}</p>
+            <router-link :to="division.to" class="division-link">Open page</router-link>
+          </article>
         </div>
-      </section>
-      
-    <!-- PREVIOUS WEEKLY REPORTS SECTION -->
-      <ResearchSection 
-        heading="M&A Deals of the Week"
-        :articles="researchArticles"
-      />
+      </div>
+    </section>
 
-    <!-- PREVIOUS EQUITY RESEARCH REPORTS SECTION -->
-      <ResearchSection 
-        heading="Equity Research"
-        :articles="researchArticles"
-      />
-
-      <!-- JOIN -->
-      <section id="join" class="section">
-        <div class="container grid join-grid">
-          <div>
-            <div class="section-header">
-              <p class="section-kicker">Join</p>
-              <h2 class="section-title">Register your interest</h2>
-            </div>
-            <p class="section-text">
-              This simple form is only for demonstration and does not submit data. In the final
-              version it could be connected to a Surrey Students' Union page, a mailing list, or an
-              internal application form.
-            </p>
-          </div>
-
-          <button type="button" style="border: 0;">
-            <span class="btn btn-primary btn-block">Register Interest</span>
-          </button>
+    <section class="stats-strip">
+      <div class="container stats-grid">
+        <div v-for="stat in stats" :key="stat.label" class="stat-item">
+          <strong>{{ stat.value }}</strong>
+          <span>{{ stat.label }}</span>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
+
+    <section id="featured-reports" class="section section-soft">
+      <div class="container">
+        <div class="section-header">
+          <p class="eyebrow section-eyebrow">Research Output</p>
+          <h2>Featured publications</h2>
+        </div>
+      </div>
+
+      <ResearchSection heading="M&A Deal of the Week" :articles="dealOfWeekArticles" section-id="deal-of-week" />
+      <ResearchSection heading="Equity Research" :articles="equityArticles" section-id="equity-research" />
+      <ResearchSection heading="Mergers & Acquisitions" :articles="maArticles" section-id="ma-research" />
+      <ResearchSection heading="Quant" :articles="quantArticles" section-id="quant-research" />
+    </section>
   </div>
 </template>
 
 <script setup>
 import ResearchSection from "../components/ResearchSection.vue"
 
-const links = [
-  { id: "about", label: "About" },
-  { id: "divisions", label: "Divisions" },
-  { id: "join", label: "Join" },
-];
+function makePlaceholderArticles(tag, count = 3) {
+  return Array.from({ length: count }, (_, index) => ({
+    id: `${tag}-${index + 1}`,
+    tag,
+    title: `Empty Title ${index + 1}`,
+    date: "Date Placeholder",
+    description: `Blank description ${index + 1}. This is a placeholder for a research article summary. Real text will go here later.`,
+    image: "",
+  }))
+}
 
-const researchArticles = [
+const divisions = [
   {
-    id: 1,
-    image: "",
-    title: "Empty Title 1",
-    date: "10 December 2025",
-    description:
-      "Blank description 1. This is a placeholder for a research article summary. Real text will go here later.",
+    tag: "Public Markets",
+    title: "Equity Research",
+    description: "Bottom-up company analysis pages and future published notes.",
+    to: "/research/equity-research",
   },
   {
-    id: 2,
-    image: "",
-    title: "Empty Title 2",
-    date: "5 December 2025",
-    description:
-      "Blank description 2. This is a placeholder for a research article summary. Real text will go here later.",
+    tag: "Weekly Coverage",
+    title: "M&A Deal of the Week",
+    description: "A dedicated page for weekly transaction commentary and updates.",
+    to: "/research/deal-of-the-week",
   },
   {
-    id: 3,
-    image: "",
-    title: "Empty Title 3",
-    date: "30 November 2025",
-    description:
-      "Blank description 3. This is a placeholder for a research article summary. Real text will go here later.",
+    tag: "Corporate Finance",
+    title: "Mergers & Acquisitions",
+    description: "A category page for broader dealmaking research and sector themes.",
+    to: "/research/mergers-acquisitions",
+  },
+  {
+    tag: "Data & Models",
+    title: "Quant",
+    description: "A research page for model-driven ideas, signals, and data-led notes.",
+    to: "/research/quant",
   },
 ]
+
+const stats = [
+  { value: "40+", label: "Reports" },
+  { value: "4", label: "Divisions" },
+  { value: "65", label: "Members" },
+  { value: "Weekly", label: "Insights" },
+]
+
+const dealOfWeekArticles = makePlaceholderArticles("Deal of the Week")
+const equityArticles = makePlaceholderArticles("Equity")
+const maArticles = makePlaceholderArticles("M&A")
+const quantArticles = makePlaceholderArticles("Quant")
 </script>
 
-<style>
-:root {
-  /* Tweak this to change hero height */
-  --hero-height: 40vh;
-
-  /* Core colours */
-  --blue: #00205b;
-  --gold: #b49400;
-  --bg: #f5f5f5;
-  --surface: #ffffff;
-  --text: #111827;
-  --muted: #4b5563;
-  --border: #abb7ce;
-  --dark: #333538;
-  --black: #1d1d1d;
-
-  /* Layout */
-  --max-width: 80em;
-  --radius-sm: 0.4rem;
-  --radius-md: 0.6rem;
-  --radius-lg: 0.8rem;
+<style scoped>
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--gradient-hero);
+  color: #fff;
+  padding: 6.5rem 0 6rem;
 }
 
-/* BASIC SETTING OF STYLING */
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  border: 0;
-  padding: 0;
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0 0 0.8rem;
+}
+
+.section-eyebrow {
+  color: var(--text-muted);
+}
+
+.hero h1 {
+  font-size: clamp(2.3rem, 5vw, 4.2rem);
   margin: 0;
-  font-size: medium;
-  text-decoration: none;
-  list-style: none;
-  outline: none;
-  vertical-align: baseline;
+  max-width: 12ch;
 }
 
-html,
-body {
-  height: 100%;
+.hero-copy {
+  max-width: 55ch;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.88);
+  margin: 1rem 0 1.8rem;
 }
 
-body {
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.ambient {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(4px);
+  opacity: 0.45;
+  animation: drift 12s ease-in-out infinite alternate;
+}
+
+.ambient-one {
+  width: 360px;
+  height: 360px;
+  background: rgba(198, 161, 63, 0.3);
+  top: -120px;
+  right: -40px;
+}
+
+.ambient-two {
+  width: 320px;
+  height: 320px;
+  background: rgba(114, 162, 255, 0.27);
+  left: -100px;
+  bottom: -130px;
+  animation-duration: 15s;
+}
+
+@keyframes drift {
+  from {
+    transform: translateY(-10px);
+  }
+  to {
+    transform: translateY(14px);
+  }
+}
+
+.section {
+  padding: 4.5rem 0;
+}
+
+.section-soft {
+  padding-top: 3rem;
+  background: linear-gradient(180deg, #f8fbff 0%, #f1f5fc 100%);
+}
+
+.section-header h2 {
+  color: var(--navy-800);
   margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
 }
 
-.page {
-  min-height: 100%;
+.division-grid {
+  margin-top: 1.4rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.division-card {
+  background: var(--gradient-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  padding: 1.2rem;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
 }
 
-
-
-
-
-/* LAYOUT & CONTAINERS */
-
-.container {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 1rem;
+.division-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card);
 }
 
-main {
-  flex: 1;
-}
-
-
-
-
-/* GENERIC SECTIONS */
-
-.section {
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-}
-
-.section .container {
-  padding: 3.75rem 1rem;
-}
-
-.section-header {
-  margin-bottom: 0.8rem;
-}
-
-.section-kicker {
+.division-tag {
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 0.7rem;
-  color: var(--muted);
-  margin: 0 0 0.35rem;
+  color: var(--blue-600);
+  margin: 0 0 0.5rem;
 }
 
-.section-title {
-  margin: 0 0 0.3rem;
-  font-size: 1.5rem;
-  color: var(--blue);
+.division-card h3 {
+  margin: 0 0 0.5rem;
+  color: var(--navy-900);
 }
 
-.section-text {
+.division-card p {
   margin: 0;
-  font-size: 0.92rem;
-  color: var(--muted);
-  line-height: 1.5;
+  color: var(--text-muted);
+  line-height: 1.55;
 }
 
-/* HERO SECTION */
-
-.hero {
-  /* main control for height */
-  min-height: var(--hero-height);
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  background: var(--gold);
-  border-color: var(--dark);
-}
-
-.hero h1 {
-  margin: 0.2rem 0 0.7rem;
-  font-size: clamp(2.6rem, 3vw + 2rem, 3rem);
-  color: var(--black);
-}
-
-/* WELCOME SECTION */
-.welcome-header {
-  text-align: center;
-}
-
-.welcome-title {
-  color: var(--blue);
-  font-size: 2.8rem;
-}
-
-.welcome-content-grid {
-  display: grid;
-  grid-template-columns: repeat(2, auto);
-  gap: 1.2rem;
+.division-link {
   margin-top: 1rem;
+  align-self: flex-start;
+  text-decoration: none;
+  border-radius: 999px;
+  padding: 0.62rem 0.95rem;
+  font-weight: 600;
+  font-size: 0.88rem;
+  background: var(--navy-900);
+  color: #fff;
 }
 
-.welcome-content-grid div {
+.division-link:hover {
+  background: var(--blue-600);
+}
+
+.stats-strip {
+  background: var(--navy-900);
+  color: #fff;
+  border-top: 1px solid rgba(233, 216, 166, 0.2);
+  border-bottom: 1px solid rgba(233, 216, 166, 0.2);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 1.4rem 0;
+}
+
+.stat-item {
   text-align: center;
-  max-width: 15rem;
-  margin: 0 auto;
 }
 
-.welcome-sections-header {
-  min-height: 10rem;
+.stat-item strong {
+  display: block;
+  font-size: 1.55rem;
+  color: var(--gold-300);
 }
 
-.welcome-span {
-  display: flex;
-  justify-content: center;
-}
-
-.material-symbols-outlined.welcome-icon {
-  font-size: 4rem;
-  color: var(--gold);
-  line-height: 1;
-  margin-bottom: 0.7em;
-}
-
-/* BUTTONS */
-
-button {
-  background-color: transparent;
+.stat-item span {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.88rem;
 }
 
 .btn {
+  text-decoration: none;
   border-radius: 999px;
-  border: 1px solid transparent;
-  padding: 0.55rem 1.3rem;
-  font-size: 0.9rem;
+  padding: 0.72rem 1.1rem;
   font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 0.9rem;
+  border: 1px solid transparent;
 }
 
-/* Used as the basic primary button appearance */
 .btn-primary {
-  background: var(--blue);
-  border-color: var(--blue);
-  color: #ffffff;
+  background: var(--gradient-accent);
+  color: #1c2741;
 }
 
-.btn-primary:hover {
-  filter: brightness(1.05);
+.btn-secondary {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
 }
 
-button span.btn {
-  display: flexbox;
-  width: 50%;
-  height: 3rem;
-  margin-top: 10%;
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
-/* GRID & CARDS */
-
-.grid {
-  display: grid;
-}
-
-/* JOIN SECTION */
-
-.join-grid {
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-}
-
-/* RESPONSIVE ADJUSTMENTS */
-
-@media (max-width: 900px) {
-  .header-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .grid {
+@media (max-width: 980px) {
+  .division-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .join-grid {
-    grid-template-columns: minmax(0, 1fr);
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 640px) {
   .hero {
-    padding-top: 0.3rem;
+    padding: 5rem 0 4.5rem;
   }
 
-  .hero .container {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+  .section {
+    padding: 3.5rem 0;
   }
 
-  .grid {
-    grid-template-columns: minmax(0, 1fr);
+  .division-grid,
+  .stats-grid {
+    grid-template-columns: 1fr;
   }
 }
-
 </style>

@@ -1,42 +1,46 @@
 <template>
   <footer class="footer">
     <div class="container footer-inner">
-      <p>AP Capital Research · University of Surrey</p>
-      <p>Prototype site for internal discussion. Content subject to change.</p>
-      <p>Made by <a href="https://github.com/dawid-paluch" class="underline">Dawid Paluch</a></p>
-      <p>© 2024 AP Capital Research</p>
+      <p class="footer-brand">Surrey Capital Research · University of Surrey</p>
+      <p>Student-run research society exploring equities, corporate finance, and quantitative markets.</p>
+      <p>
+        Connect on
+        <a href="https://www.linkedin.com/company/ap-capital-research/" target="_blank" rel="noopener">LinkedIn</a>
+      </p>
+      <p class="footer-meta">© 2026 Surrey Capital Research · Prototype website</p>
     </div>
   </footer>
 </template>
 
 <style scoped>
 .footer {
-  background: var(--blue);
-  border-top: 1px solid var(--gold);
+  background: linear-gradient(180deg, #08152f 0%, #0d2147 100%);
+  border-top: 1px solid rgba(233, 216, 166, 0.35);
 }
 
 .footer-inner {
-  padding: 1rem 1rem;
+  padding: 2rem 0;
   text-align: center;
-  font-size: 0.82rem;
-  color: var(--surface);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.88rem;
+}
+
+.footer-brand {
+  color: #fff;
+  font-weight: 600;
 }
 
 .footer-inner p {
-    font-size: 0.82rem;
-    color: var(--muted);
-    margin: 0.4rem 0;
+  margin: 0.45rem 0;
 }
 
-.underline {
-    color: var(--muted);
-    font-size: 0.82rem;
-    text-decoration: underline;
+a {
+  color: var(--gold-300);
+  text-decoration: underline;
 }
 
-.underline:hover {
-    color: var(--bg);
-    text-emphasis: bold;
-    text-decoration: none;
+.footer-meta {
+  margin-top: 0.8rem;
+  color: rgba(255, 255, 255, 0.67);
 }
 </style>

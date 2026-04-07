@@ -1,57 +1,59 @@
 <template>
   <header class="header">
     <div class="container header-row">
-      <!-- Logo + burger -->
-      <div class="brand-row">
-        <div class="logo">
-          <span class="logo-mark">AP</span>
-          <div class="logo-text">
-            <span class="logo-title">AP Capital Research</span>
-            <span class="logo-subtitle">University of Surrey</span>
+      <router-link to="/" class="logo" @click="closeMenu">
+        <span class="logo-mark">SR</span>
+        <span class="logo-text">
+          <strong>Surrey Capital Research</strong>
+          <small>University of Surrey</small>
+        </span>
+      </router-link>
+
+      <button
+        class="nav-toggle"
+        :class="{ 'nav-toggle--open': isOpen }"
+        type="button"
+        aria-label="Toggle navigation"
+        :aria-expanded="isOpen"
+        @click="toggleMenu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav :class="['nav', { 'nav--open': isOpen }]">
+        <router-link to="/" class="nav-link" @click="closeMenu">Home</router-link>
+        <router-link :to="{ path: '/', hash: '#what-we-do' }" class="nav-link" @click="closeMenu">What We Do</router-link>
+        <router-link to="/our-team" class="nav-link" @click="closeMenu">Our Team</router-link>
+
+        <div
+          class="nav-dropdown"
+          :class="{ 'nav-dropdown--open': isResearchMenuOpen }"
+          @mouseenter="openDesktopResearch"
+          @mouseleave="closeDesktopResearch"
+        >
+          <button
+            class="nav-link nav-dropdown-trigger"
+            type="button"
+            aria-label="Open research pages"
+            @click="toggleResearchMobile"
+            @focus="openDesktopResearch"
+          >
+            Research
+            <span class="caret">▾</span>
+          </button>
+
+          <div class="dropdown-menu">
+            <router-link to="/research/equity-research" class="dropdown-link" @click="closeMenu">Equity Research</router-link>
+            <router-link to="/research/deal-of-the-week" class="dropdown-link" @click="closeMenu">M&amp;A Deal of the Week</router-link>
+            <router-link to="/research/mergers-acquisitions" class="dropdown-link" @click="closeMenu">Mergers &amp; Acquisitions</router-link>
+            <router-link to="/research/quant" class="dropdown-link" @click="closeMenu">Quant</router-link>
           </div>
         </div>
 
-        <!-- Burger toggle (mobile only) -->
-        <button
-          class="nav-toggle"
-          :class="{ 'nav-toggle--open': isOpen }"
-          type="button"
-          @click="isOpen = !isOpen"
-          :aria-expanded="isOpen ? 'true' : 'false'"
-          aria-label="Toggle navigation"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-      </div>
-
-      <!-- Navigation -->
-      <nav :class="['nav', { 'nav--open': isOpen }]">
-        <!-- Home (real link) -->
-        <router-link to="/" class="nav-link" @click="closeMenu">Home</router-link>
-
-
-        <!-- Placeholder links for now -->
-        <button type="button" class="nav-link nav-link--button" @click="closeMenu">About Us</button>
-
-        <router-link to="/our-team" class="nav-link nav-link--button" @click="closeMenu">Our Team</router-link>
-
-        <!-- Equity Research / Deal of the Week grouped -->
-        <div class="nav-group">
-          <button type="button" class="nav-link nav-link--group nav-link--button" @click="closeMenu">Equity Research</button>
-
-          <span class="nav-group-separator">/</span>
-          
-          <button type="button" class="nav-link nav-link--group nav-link--button" @click="closeMenu">Deal of the Week</button>
-        </div>
-
-        <button type="button" class="nav-link nav-link--button" @click="closeMenu">Contact Us</button>
-
-        <!-- LinkedIn (real external link) -->
-        <a :href="linkedinHref" class="nav-link nav-link--linkedin" target="_blank" rel="noopener" @click="closeMenu">
+        <a :href="linkedinHref" class="nav-link linkedin" target="_blank" rel="noopener" @click="closeMenu">
           LinkedIn
-          <span class="linkedin-icon">in</span>
         </a>
       </nav>
     </div>
@@ -59,13 +61,9 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { computed, ref } from "vue"
 
-const props = defineProps({
-  homeHref: {
-    type: String,
-    default: "/",
-  },
+defineProps({
   linkedinHref: {
     type: String,
     default: "https://www.linkedin.com/company/ap-capital-research/",
@@ -73,90 +71,192 @@ const props = defineProps({
 })
 
 const isOpen = ref(false)
+const mobileResearchOpen = ref(false)
+const desktopResearchOpen = ref(false)
+
+const isResearchMenuOpen = computed(() => mobileResearchOpen.value || desktopResearchOpen.value)
+
+function isMobile() {
+  return typeof window !== "undefined" && window.innerWidth <= 900
+}
 
 function closeMenu() {
   isOpen.value = false
+  mobileResearchOpen.value = false
+  desktopResearchOpen.value = false
+}
+
+function toggleMenu() {
+  isOpen.value = !isOpen.value
+  if (!isOpen.value) {
+    mobileResearchOpen.value = false
+  }
+}
+
+function toggleResearchMobile() {
+  if (isMobile()) {
+    mobileResearchOpen.value = !mobileResearchOpen.value
+  }
+}
+
+function openDesktopResearch() {
+  if (!isMobile()) {
+    desktopResearchOpen.value = true
+  }
+}
+
+function closeDesktopResearch() {
+  if (!isMobile()) {
+    desktopResearchOpen.value = false
+  }
 }
 </script>
 
 <style scoped>
 .header {
-  background: var(--blue);
-  color: #ffffff;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(12px);
+  background: linear-gradient(160deg, rgba(7, 22, 50, 0.95), rgba(10, 34, 79, 0.92));
+  border-bottom: 1px solid rgba(233, 216, 166, 0.22);
 }
 
 .header-row {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.5rem 0;
-}
-
-.brand-row {
-  display: flex;
   align-items: center;
+  min-height: 78px;
   gap: 1rem;
 }
-
-/* Logo */
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: #fff;
 }
 
 .logo-mark {
-  width: 2rem;
-  height: 2rem;
+  width: 2.1rem;
+  height: 2.1rem;
   border-radius: 999px;
-  background: var(--gold);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: #111827;
+  background: var(--gradient-accent);
+  color: #1b2438;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
 }
 
 .logo-text {
   display: flex;
   flex-direction: column;
-  font-size: 0.8rem;
+  line-height: 1.2;
 }
 
-.logo-title {
-  font-size: 0.95rem;
-  font-weight: 600;
+.logo-text small {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.72rem;
 }
 
-.logo-subtitle {
-  opacity: 0.9;
+.nav {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
 
-/* Burger button */
+.nav-link {
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  color: #fff;
+  border-color: rgba(233, 216, 166, 0.35);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-dropdown {
+  position: relative;
+  padding-bottom: 0.3rem;
+  margin-bottom: -0.3rem;
+}
+
+.nav-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.caret {
+  font-size: 0.7rem;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% - 0.05rem);
+  left: 0;
+  min-width: 240px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-card);
+  padding: 0.45rem;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.nav-dropdown--open .dropdown-menu {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.dropdown-link {
+  display: block;
+  padding: 0.55rem 0.65rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text-main);
+  font-size: 0.86rem;
+}
+
+.dropdown-link:hover {
+  background: var(--surface-muted);
+  color: var(--navy-800);
+}
+
+.linkedin {
+  border-color: rgba(233, 216, 166, 0.45);
+}
 
 .nav-toggle {
   display: none;
-  background: none;
-  border: none;
-  padding: 0.25rem;
-  cursor: pointer;
-  flex-direction: column;
-  gap: 0.18rem;
+  margin-left: auto;
+  background: transparent;
+  border: 0;
 }
 
 .nav-toggle span {
-  width: 1.4rem;
+  display: block;
+  width: 1.5rem;
   height: 2px;
-  border-radius: 999px;
-  background: #e5e7eb;
-  transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+  margin: 4px 0;
+  background: #fff;
+  transition: 0.2s;
 }
 
 .nav-toggle--open span:nth-child(1) {
-  transform: translateY(4px) rotate(45deg);
+  transform: rotate(45deg) translateY(8px);
 }
 
 .nav-toggle--open span:nth-child(2) {
@@ -164,176 +264,64 @@ function closeMenu() {
 }
 
 .nav-toggle--open span:nth-child(3) {
-  transform: translateY(-4px) rotate(-45deg);
+  transform: rotate(-45deg) translateY(-8px);
 }
 
-/* Nav */
-.nav {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  gap: 1.4rem;
-}
-
-.nav-link {
-  position: relative;
-  border: none;
-  background: none;
-  color: #e5e7eb;
-  font-size: 0.8rem;
-  padding: 0.2rem 0.3rem;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-/* for button links, remove default styles */
-.nav-link--button {
-  text-align: left;
-}
-
-/* hover underline */
-.nav-link:hover {
-  color: #ffffff;
-}
-
-.nav-link::after {
-  content: "";
-  position: absolute;
-  left: 0.2rem;
-  right: 0.2rem;
-  bottom: 0;
-  height: 2px;
-  background: #ffffff;
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform 0.4s ease-out;
-}
-
-.nav-link:hover::after {
-  transform: scaleX(1);
-}
-
-/* Equity Research / Deal of the Week group */
-
-.nav-group {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.15rem;
-}
-
-.nav-link--group {
-  padding-inline: 0.2rem;
-}
-
-.nav-group-separator {
-  color: #e5e7eb;
-  opacity: 0.7;
-}
-
-/* LinkedIn */
-
-.nav-link--linkedin {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.linkedin-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1rem;
-  height: 1rem;
-  border-radius: 0.15rem;
-  background: #0a66c2;
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: #ffffff;
-}
-
-/* Desktop layout */
-@media (min-width: 901px) {
-  .header-row {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .brand-row {
-    flex: 0 0 auto;
-  }
-
-  .nav {
-    display: flex;
-    flex-wrap: nowrap;
-    flex: 1 1 auto;
-    justify-content: flex-end;
-    align-items: center;
-  }
-
-  .nav-toggle {
-    display: none;
-  }
-}
-
-/* Mobile layout: burger menu */
 @media (max-width: 900px) {
-  .brand-row {
-    width: 100%;
-    justify-content: space-between;
+  .header-row {
+    flex-wrap: wrap;
+    padding: 0.6rem 0;
   }
 
   .nav-toggle {
-    display: inline-flex;
+    display: block;
   }
 
   .nav {
     width: 100%;
     flex-direction: column;
-    align-items: flex-end;
-    gap: 0.3rem;
-    padding-top: 0.35rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    align-items: stretch;
     max-height: 0;
-    opacity: 0;
-    transform: scaleY(0.95);
-    transform-origin: top;
-    visibility: hidden;
-    pointer-events: none;
     overflow: hidden;
-    transition:
-      max-height 0.45s ease-out,
-      opacity 0.4s ease-out,
-      transform 0.4s ease-out;
+    opacity: 0;
+    transition: all 0.25s ease;
+    margin-top: 0;
   }
 
   .nav--open {
-    max-height: 500px;
+    max-height: 520px;
     opacity: 1;
-    transform: scaleY(1);
-    visibility: visible;
-    pointer-events: auto;
+    margin-top: 0.5rem;
   }
 
   .nav-link {
-    width: auto;
-    padding: 0.35rem 0.1rem;
-    text-align: right;
+    border-radius: 10px;
+    text-align: left;
   }
 
-  .nav-group {
+  .nav-dropdown {
     width: 100%;
-    display: flex;
-    justify-content: flex-end;
+    padding-bottom: 0;
+    margin-bottom: 0;
   }
 
-  .nav-group .nav-link {
-    width: auto;
+  .dropdown-menu {
+    position: static;
+    margin-top: 0.35rem;
+    box-shadow: none;
+    border-radius: 10px;
+    border-color: rgba(216, 224, 239, 0.7);
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 0.45rem;
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
   }
 
-  .nav-link--linkedin {
-    width: 100%;
-    justify-content: flex-end;
+  .nav-dropdown--open .dropdown-menu {
+    max-height: 260px;
+    padding: 0.45rem;
   }
 }
 </style>

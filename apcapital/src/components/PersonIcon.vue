@@ -1,24 +1,19 @@
 <template>
-  <div class="person-card">
-    <figure class="research-card-media">
-      <img
-        v-if="person.image"
-        :src="person.image"
-        :alt="person.name"
-        class="research-card-image"
-      />
+  <article class="person-card">
+    <figure class="person-media">
+      <img v-if="person.image" :src="person.image" :alt="person.name" class="person-image" />
       <div v-else class="image-placeholder">
-        <span>Image placeholder</span>
+        <span>Profile image</span>
       </div>
     </figure>
 
-    <h1>{{ person.name }}</h1>
+    <h3>{{ person.name }}</h3>
     <p class="job-title">{{ person.title }}</p>
-  </div>
+  </article>
 </template>
 
 <script setup>
-const props = defineProps({
+defineProps({
   person: {
     type: Object,
     required: true,
@@ -27,92 +22,56 @@ const props = defineProps({
 </script>
 
 <style scoped>
-/* Root card: inherits font-size from parent */
 .person-card {
   text-align: center;
-  padding: 1.2em;
-  border-radius: 0.8em;
-  width: 24em;        /* width scales with font-size */
-  max-width: 100%;
-  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: var(--shadow-soft);
 }
 
-/* media wrapper */
-.research-card-media {
-  margin: 0 0 1em;
+.person-media {
+  margin: 0 0 0.85rem;
 }
 
-/* real image + placeholder share same square aspect ratio */
-.research-card-image,
+.person-image,
 .image-placeholder {
   width: 100%;
-  aspect-ratio: 1 / 1;       /* square */
-  border-radius: 0.6em;
+  max-width: 240px;
+  margin: 0 auto;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
   display: block;
-  overflow: hidden;
-  box-shadow: 0 0.8em 1.6em rgba(0, 0, 0, 0.35);
 }
 
-/* real image specifics */
-.research-card-image {
+.person-image {
   object-fit: cover;
 }
 
-/* placeholder specifics */
 .image-placeholder {
-  background-color: #ffffff;
+  background: linear-gradient(145deg, #0f2855 0%, #2f5ca8 100%);
+  color: rgba(255, 255, 255, 0.86);
   position: relative;
 }
 
 .image-placeholder span {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.85em;
-  color: var(--text-secondary);
+  display: grid;
+  place-items: center;
+  font-size: 0.82rem;
 }
 
-/* text */
-h1 {
-  font-size: 1.3em;
-  margin: 0.4em 0 0.2em;
-  color: var(--text);
+h3 {
+  margin: 0.4rem 0 0.2rem;
+  color: var(--navy-900);
+  font-size: 1.08rem;
 }
 
 .job-title {
-  font-size: 0.9em;
-  font-style: italic;
-  color: var(--text-secondary);
-}
-
-/* ---------- Responsive tweaks ---------- */
-
-/* tablet-ish: slightly narrower card */
-@media (max-width: 900px) {
-  .person-card {
-    width: 20em;
-    padding: 1em;
-    border-radius: 0.7em;
-  }
-
-  .research-card-media {
-    margin-bottom: 0.9em;
-  }
-}
-
-/* phones: full-width card, square image kept */
-@media (max-width: 600px) {
-  .person-card {
-    width: 100%;
-    max-width: 20em;   /* don’t get too wide on big phones */
-    padding: 0.9em;
-    border-radius: 0.7em;
-  }
-
-  .research-card-media {
-    margin-bottom: 0.8em;
-  }
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.88rem;
 }
 </style>

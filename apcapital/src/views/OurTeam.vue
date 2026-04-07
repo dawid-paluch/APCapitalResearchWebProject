@@ -1,110 +1,95 @@
 <template>
-  <div class="page">
-    <main>
-      <div class="topJob">
-        <PersonIcon :person="person1" style="font-size: 1.35rem;"/>
+  <section class="team-page">
+    <div class="container">
+      <header class="team-header">
+        <p class="eyebrow">Leadership</p>
+        <h1>Our Team</h1>
+        <p>
+          AP Capital Research is led by a student committee spanning research, events, and education.
+        </p>
+      </header>
+
+      <div class="top-role">
+        <PersonIcon :person="president" />
       </div>
-      <div class="jobRow">
-        <PersonIcon :person="person1" />
-        <PersonIcon :person="person1" />
-        <PersonIcon :person="person1" />
+
+      <div class="role-grid">
+        <PersonIcon v-for="person in leads" :key="person.name + person.title" :person="person" />
       </div>
-    </main>
-  </div>
+    </div>
+  </section>
 </template>
 
 <script setup>
-  import PersonIcon from '../components/PersonIcon.vue';
+import PersonIcon from "../components/PersonIcon.vue"
 
-  const person1 = {
-    name: 'John Doe',
-    title: 'Job 1',
-    image: null,
-  };
+const president = {
+  name: "John Doe",
+  title: "Job Role",
+  image: null,
+}
+
+const leads = [
+  { name: "John Doe", title: "Job Role", image: null },
+  { name: "John Doe", title: "Job Role", image: null },
+  { name: "John Doe", title: "Job Role", image: null },
+]
 </script>
 
 <style scoped>
-p {
-  text-align: center;
-  margin-top: 2rem;
-  font-size: 1.2rem;
-  color: var(--text);
+.team-page {
+  padding: 4rem 0;
+  background: linear-gradient(180deg, #f2f6fe 0%, #eef3fb 100%);
 }
 
-.topJob {
-  display: flex;
-  justify-content: center;
-  margin: 2rem 0 2.5rem;
-}
-
-.topJob :deep(.person-card) {
-  font-size: 1.2rem;
-}
-
-/* Row of other roles */
-.jobRow {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, auto));
-  gap: 2rem;
+.team-header {
+  max-width: 60ch;
   margin-bottom: 2rem;
-  justify-content: center;
 }
 
-.jobRow :deep(.person-card) {
-  font-size: 0.95rem;
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--blue-600);
+  font-size: 0.72rem;
+  margin: 0 0 0.6rem;
 }
 
-/* ---------- Responsive tweaks ---------- */
+.team-header h1 {
+  margin: 0;
+  color: var(--navy-900);
+  font-size: clamp(1.9rem, 4vw, 2.5rem);
+}
 
-/* Tablets: 2 columns, slightly smaller cards */
+.team-header p {
+  margin: 0.9rem 0 0;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.top-role {
+  margin-bottom: 1rem;
+}
+
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
 @media (max-width: 900px) {
-  p {
-    font-size: 1.1rem;
-    margin-top: 1.5rem;
-  }
-
-  .topJob {
-    margin: 1.8rem 0 2rem;
-  }
-
-  .topJob :deep(.person-card) {
-    font-size: 1.1rem;
-  }
-
-  .jobRow {
-    grid-template-columns: repeat(2, minmax(0, auto));
-    gap: 1.5rem;
-  }
-
-  .jobRow :deep(.person-card) {
-    font-size: 0.9rem;
+  .role-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* Phones: 1 column, full-width cards */
-@media (max-width: 600px) {
-  p {
-    font-size: 1rem;
-    margin-top: 1.2rem;
-    padding: 0 1rem;
+@media (max-width: 640px) {
+  .team-page {
+    padding: 3rem 0;
   }
 
-  .topJob {
-    margin: 1.5rem 0 1.75rem;
-  }
-
-  .topJob :deep(.person-card) {
-    font-size: 1rem;
-  }
-
-  .jobRow {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 1.2rem;
-  }
-
-  .jobRow :deep(.person-card) {
-    font-size: 0.9rem;
+  .role-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>
-
