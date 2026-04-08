@@ -4,14 +4,20 @@
       <div class="ambient ambient-one"></div>
       <div class="ambient ambient-two"></div>
       <div class="container hero-content">
-        <p class="eyebrow">Student Finance Society</p>
-        <h1>AP Capital Research</h1>
-        <p class="hero-copy">
-          A student-led platform for equity, M&amp;A, and quant research with practical weekly insights.
-        </p>
-        <div class="hero-actions">
-          <a href="#featured-reports" class="btn btn-primary">Read Latest Research</a>
-          <router-link to="/our-team" class="btn btn-secondary">Meet the Team</router-link>
+        <div class="hero-layout" :class="{ 'hero-layout--with-image': heroImageSrc }">
+          <img v-if="heroImageSrc" :src="heroImageSrc" :alt="heroImageAlt" class="hero-image" />
+
+          <div class="hero-text">
+            <p class="eyebrow">Student Finance Society</p>
+            <h1>Surrey Capital Research</h1>
+            <p class="hero-copy">
+              A student-led platform for equity, M&amp;A, and quant research with practical weekly insights.
+            </p>
+            <div class="hero-actions">
+              <a href="#featured-reports" class="btn btn-primary">Read Latest Research</a>
+              <router-link to="/our-team" class="btn btn-secondary">Meet the Team</router-link>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -61,6 +67,10 @@
 
 <script setup>
 import ResearchSection from "../components/ResearchSection.vue"
+import heroImage from "../assets/logo4.png"
+
+const heroImageSrc = heroImage
+const heroImageAlt = "Surrey Capital Research Visual"
 
 function makePlaceholderArticles(tag, count = 3) {
   return Array.from({ length: count }, (_, index) => ({
@@ -125,6 +135,25 @@ const quantArticles = makePlaceholderArticles("Quant")
 .hero-content {
   position: relative;
   z-index: 2;
+}
+
+.hero-layout {
+  display: block;
+}
+
+.hero-layout--with-image {
+  display: grid;
+  grid-template-columns: minmax(220px, 340px) minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.hero-image {
+  width: 100%;
+  max-width: 340px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(233, 216, 166, 0.4);
+  box-shadow: var(--shadow-card);
 }
 
 .eyebrow {
@@ -318,6 +347,14 @@ const quantArticles = makePlaceholderArticles("Quant")
 }
 
 @media (max-width: 980px) {
+  .hero-layout--with-image {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-image {
+    max-width: 290px;
+  }
+
   .division-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

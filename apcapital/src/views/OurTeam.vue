@@ -5,7 +5,7 @@
         <p class="eyebrow">Leadership</p>
         <h1>Our Team</h1>
         <p>
-          AP Capital Research is led by a student committee spanning research, events, and education.
+          Surrey Capital Research is led by a student committee spanning research, events, and education.
         </p>
       </header>
 

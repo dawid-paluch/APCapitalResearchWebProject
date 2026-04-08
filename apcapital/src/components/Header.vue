@@ -2,7 +2,7 @@
   <header class="header">
     <div class="container header-row">
       <router-link to="/" class="logo" @click="closeMenu">
-        <span class="logo-mark">SR</span>
+        <img :src="logoImage" alt="Surrey Capital Research logo" class="logo-image" />
         <span class="logo-text">
           <strong>Surrey Capital Research</strong>
           <small>University of Surrey</small>
@@ -25,7 +25,29 @@
       <nav :class="['nav', { 'nav--open': isOpen }]">
         <router-link to="/" class="nav-link" @click="closeMenu">Home</router-link>
         <router-link :to="{ path: '/', hash: '#what-we-do' }" class="nav-link" @click="closeMenu">What We Do</router-link>
-        <router-link to="/our-team" class="nav-link" @click="closeMenu">Our Team</router-link>
+
+        <div
+          class="nav-dropdown"
+          :class="{ 'nav-dropdown--open': isTeamMenuOpen }"
+          @mouseenter="openDesktopTeam"
+          @mouseleave="closeDesktopTeam"
+        >
+          <button
+            class="nav-link nav-dropdown-trigger"
+            type="button"
+            aria-label="Open our team pages"
+            @click="toggleTeamMobile"
+            @focus="openDesktopTeam"
+          >
+            Our Team
+            <span class="caret">▾</span>
+          </button>
+
+          <div class="dropdown-menu">
+            <router-link to="/our-team" class="dropdown-link" @click="closeMenu">Members</router-link>
+            <router-link to="/alumni" class="dropdown-link" @click="closeMenu">Alumni</router-link>
+          </div>
+        </div>
 
         <div
           class="nav-dropdown"
@@ -62,6 +84,7 @@
 
 <script setup>
 import { computed, ref } from "vue"
+import logoImage from "../assets/logo2.png"
 
 defineProps({
   linkedinHref: {
@@ -73,8 +96,11 @@ defineProps({
 const isOpen = ref(false)
 const mobileResearchOpen = ref(false)
 const desktopResearchOpen = ref(false)
+const mobileTeamOpen = ref(false)
+const desktopTeamOpen = ref(false)
 
 const isResearchMenuOpen = computed(() => mobileResearchOpen.value || desktopResearchOpen.value)
+const isTeamMenuOpen = computed(() => mobileTeamOpen.value || desktopTeamOpen.value)
 
 function isMobile() {
   return typeof window !== "undefined" && window.innerWidth <= 900
@@ -84,12 +110,15 @@ function closeMenu() {
   isOpen.value = false
   mobileResearchOpen.value = false
   desktopResearchOpen.value = false
+  mobileTeamOpen.value = false
+  desktopTeamOpen.value = false
 }
 
 function toggleMenu() {
   isOpen.value = !isOpen.value
   if (!isOpen.value) {
     mobileResearchOpen.value = false
+    mobileTeamOpen.value = false
   }
 }
 
@@ -108,6 +137,24 @@ function openDesktopResearch() {
 function closeDesktopResearch() {
   if (!isMobile()) {
     desktopResearchOpen.value = false
+  }
+}
+
+function toggleTeamMobile() {
+  if (isMobile()) {
+    mobileTeamOpen.value = !mobileTeamOpen.value
+  }
+}
+
+function openDesktopTeam() {
+  if (!isMobile()) {
+    desktopTeamOpen.value = true
+  }
+}
+
+function closeDesktopTeam() {
+  if (!isMobile()) {
+    desktopTeamOpen.value = false
   }
 }
 </script>
@@ -323,5 +370,12 @@ function closeDesktopResearch() {
     max-height: 260px;
     padding: 0.45rem;
   }
+}
+
+.logo-image {
+  width: 2.4rem;
+  height: 2.4rem;
+  object-fit: contain;
+  display: block;
 }
 </style>
